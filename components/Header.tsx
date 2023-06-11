@@ -44,7 +44,9 @@ export function Header() {
           color: 'rgba(137, 156, 177, 1)',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          marginRight: '8px',
+          minWidth: 50
         }}
       >
         {getCurrentDate()}

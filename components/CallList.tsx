@@ -3,6 +3,7 @@ import {
   Box,
   Checkbox,
   CircularProgress,
+  Grid,
   Paper,
   Table,
   TableBody,
@@ -37,12 +38,14 @@ export function CallList() {
   const pageSize = 50
 
   useEffect(() => {
+    setIsLoad(true)
     callService
       .getCallsList(['2022-08-01', getFormatDate(new Date())])
       .then((loadData) => {
         setItems(getItemsFromLoadData(loadData))
       })
       .catch(setError)
+      .finally(() => setIsLoad(false))
   }, [])
 
   const getTime = (date: string): string => {
@@ -188,199 +191,215 @@ export function CallList() {
             flexDirection: 'column',
             margin: '120px',
             overflow: 'hidden',
-            height: '100%'
+            height: '100%',
+            minHeight: 600
           }}
         >
           <CallListHeader callback={updateList} />
-          <Paper sx={{ marginTop: '20px', overflow: 'hidden' }}>
-            <TableContainer
-              onScroll={onScroll}
-              sx={{
-                background: '#FFFFFF',
-                boxShadow: '0px 4px 5px #E9EDF3',
-                borderRadius: '8px',
-                height: '100%'
-              }}
+          <Grid container sx={{ overflow: 'hidden' }}>
+            <Grid
+              item
+              xs={8}
+              sm={12}
+              columns={headers.length}
+              sx={{ height: '100%' }}
             >
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    {headers.map((header, index) => (
-                      <TableCell
-                        padding={
-                          header.type === 'checkbox' ? 'checkbox' : 'normal'
-                        }
-                        sx={{
-                          textAlign: 'center',
-                          color: 'rgba(137, 156, 177, 1)',
-                          fontSize: 14
-                        }}
-                        key={index}
-                      >
-                        {header.type === 'checkbox' ? (
-                          <>
-                            {rowHoverId ? <Checkbox color='primary' /> : <></>}
-                          </>
-                        ) : (
-                          <span>{header.title}</span>
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {items && items?.length ? (
-                    items.map((value, index) => {
-                      const {
-                        id,
-                        title,
-                        count,
-                        in_out,
-                        date,
-                        partner_data,
-                        source,
-                        time,
-                        person_avatar,
-                        status,
-                        person_name,
-                        person_surname,
-                        partnership_id
-                      } = value
-
-                      const notTitle = !title
-                      const statusIsTrue = status === CallStatus.TRUE
-                      const iconStyle = getIconStyle(statusIsTrue)
-                      const duration = getDuration(time)
-
-                      return (
-                        <TableRow
-                          hover
-                          tabIndex={-1}
+              <TableContainer
+                component={Paper}
+                onScroll={onScroll}
+                sx={{
+                  background: '#FFFFFF',
+                  boxShadow: '0px 4px 5px #E9EDF3',
+                  borderRadius: '8px',
+                  width: '100%',
+                  marginTop: '20px',
+                  height: 'calc(100% - 20px)'
+                }}
+              >
+                <Table stickyHeader sx={{ minWidth: 650 }}>
+                  <TableHead>
+                    <TableRow>
+                      {headers.map((header, index) => (
+                        <TableCell
+                          padding={
+                            header.type === 'checkbox' ? 'checkbox' : 'normal'
+                          }
+                          sx={{
+                            textAlign: 'center',
+                            color: 'rgba(137, 156, 177, 1)',
+                            fontSize: 14
+                          }}
                           key={index}
-                          onMouseEnter={() => setRowHoverId(id)}
-                          onMouseLeave={() => setRowHoverId(null)}
-                          sx={{ fontSize: 15 }}
                         >
-                          {title && (
-                            <TableCell
-                              sx={{
-                                position: 'sticky',
-                                top: '56px',
-                                background: 'rgba(255, 255, 255, 1)',
-                                zIndex: 1
-                              }}
-                              colSpan={headers.length}
-                            >
-                              <span>
-                                <span
-                                  style={{
-                                    color: 'rgba(18, 41, 69, 1)',
-                                    fontSize: 15
-                                  }}
-                                >
-                                  {getGroupDate(title)}{' '}
-                                </span>
-                                <span
-                                  style={{
-                                    color: 'rgba(137, 156, 177, 1)',
-                                    verticalAlign: 'super'
-                                  }}
-                                >
-                                  {count}
-                                </span>
-                              </span>
-                            </TableCell>
-                          )}
-                          {notTitle && (
-                            <TableCell padding='checkbox'>
-                              {rowHoverId === id ? (
+                          {header.type === 'checkbox' ? (
+                            <>
+                              {rowHoverId ? (
                                 <Checkbox color='primary' />
                               ) : (
-                                <div style={{ width: 46 }}></div>
+                                <></>
                               )}
-                            </TableCell>
+                            </>
+                          ) : (
+                            <span>{header.title}</span>
                           )}
-                          {notTitle && (
-                            <TableCell>
-                              {in_out === CallType.INCOMING ? (
-                                <CallReceived sx={iconStyle} />
-                              ) : (
-                                <CallMade sx={iconStyle} />
-                              )}
-                            </TableCell>
-                          )}
-                          {notTitle && <TableCell>{getTime(date)}</TableCell>}
-                          {notTitle && (
-                            <TableCell>
-                              <Avatar
-                                alt={`${person_name} ${person_surname}`}
-                                src={person_avatar}
-                              />
-                            </TableCell>
-                          )}
-                          {notTitle && (
-                            <TableCell
-                              sx={{
-                                color: CallStatus.TRUE
-                                  ? 'rgba(18, 41, 69, 1)'
-                                  : 'rgba(94, 119, 147, 1)'
-                              }}
-                            >
-                              <span
-                                style={{
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  overflow: 'hidden'
-                                }}
-                              >{`+${partner_data.phone}`}</span>
-                            </TableCell>
-                          )}
-
-                          {notTitle && <TableCell>{source}</TableCell>}
-                          {notTitle && (
-                            <TableCell>
-                              <Rate type={getRateType(statusIsTrue, time)} />
-                            </TableCell>
-                          )}
-                          {notTitle && (
-                            <TableCell
-                              sx={{
-                                minWidth: 340,
-                                padding: '0 20px',
-                                textAlign: 'right'
-                              }}
-                            >
-                              {rowHoverId === id ? (
-                                <AudioPlayer
-                                  id={id}
-                                  partnership_id={partnership_id}
-                                />
-                              ) : (
-                                <span>{duration}</span>
-                              )}
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      )
-                    })
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        sx={{ textAlign: 'center' }}
-                        colSpan={headers.length}
-                      >
-                        {isLoad ? (
-                          <CircularProgress />
-                        ) : (
-                          <Typography>Empty List</Typography>
-                        )}
-                      </TableCell>
+                        </TableCell>
+                      ))}
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
+                  </TableHead>
+                  <TableBody>
+                    {items && items?.length ? (
+                      items.map((value, index) => {
+                        const {
+                          id,
+                          title,
+                          count,
+                          in_out,
+                          date,
+                          partner_data,
+                          source,
+                          time,
+                          person_avatar,
+                          status,
+                          person_name,
+                          person_surname,
+                          partnership_id
+                        } = value
+
+                        const notTitle = !title
+                        const statusIsTrue = status === CallStatus.TRUE
+                        const iconStyle = getIconStyle(statusIsTrue)
+                        const duration = getDuration(time)
+
+                        return (
+                          <TableRow
+                            hover
+                            tabIndex={-1}
+                            key={index}
+                            onMouseEnter={() => setRowHoverId(id)}
+                            onMouseLeave={() => setRowHoverId(null)}
+                            sx={{ fontSize: 15 }}
+                          >
+                            {title && (
+                              <TableCell
+                                sx={{
+                                  position: 'sticky',
+                                  top: '56px',
+                                  background: 'rgba(255, 255, 255, 1)',
+                                  zIndex: 1
+                                }}
+                                colSpan={headers.length}
+                              >
+                                <span>
+                                  <span
+                                    style={{
+                                      color: 'rgba(18, 41, 69, 1)',
+                                      fontSize: 15
+                                    }}
+                                  >
+                                    {getGroupDate(title)}{' '}
+                                  </span>
+                                  <span
+                                    style={{
+                                      color: 'rgba(137, 156, 177, 1)',
+                                      verticalAlign: 'super'
+                                    }}
+                                  >
+                                    {count}
+                                  </span>
+                                </span>
+                              </TableCell>
+                            )}
+                            {notTitle && (
+                              <TableCell padding='checkbox'>
+                                {rowHoverId === id ? (
+                                  <Checkbox color='primary' />
+                                ) : (
+                                  <div style={{ width: 46 }}></div>
+                                )}
+                              </TableCell>
+                            )}
+                            {notTitle && (
+                              <TableCell>
+                                {in_out === CallType.INCOMING ? (
+                                  <CallReceived sx={iconStyle} />
+                                ) : (
+                                  <CallMade sx={iconStyle} />
+                                )}
+                              </TableCell>
+                            )}
+                            {notTitle && <TableCell>{getTime(date)}</TableCell>}
+                            {notTitle && (
+                              <TableCell>
+                                <Avatar
+                                  alt={`${person_name} ${person_surname}`}
+                                  src={person_avatar}
+                                />
+                              </TableCell>
+                            )}
+                            {notTitle && (
+                              <TableCell
+                                sx={{
+                                  color: CallStatus.TRUE
+                                    ? 'rgba(18, 41, 69, 1)'
+                                    : 'rgba(94, 119, 147, 1)'
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden'
+                                  }}
+                                >{`+${partner_data.phone}`}</span>
+                              </TableCell>
+                            )}
+
+                            {notTitle && <TableCell>{source}</TableCell>}
+                            {notTitle && (
+                              <TableCell>
+                                <Rate type={getRateType(statusIsTrue, time)} />
+                              </TableCell>
+                            )}
+                            {notTitle && (
+                              <TableCell
+                                sx={{
+                                  minWidth: 340,
+                                  padding: '0 20px',
+                                  textAlign: 'right'
+                                }}
+                              >
+                                {rowHoverId === id ? (
+                                  <AudioPlayer
+                                    id={id}
+                                    partnership_id={partnership_id}
+                                  />
+                                ) : (
+                                  <span>{duration}</span>
+                                )}
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        )
+                      })
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          sx={{ textAlign: 'center' }}
+                          colSpan={headers.length}
+                        >
+                          {isLoad ? (
+                            <CircularProgress />
+                          ) : (
+                            <Typography>Empty List</Typography>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
         </Box>
       )}
     </>
