@@ -15,7 +15,8 @@ export function Accordion() {
         flexDirection: 'column',
         backgroundColor: '#091336',
         width: 240,
-        height: '100%'
+        height: '100%',
+        boxSizing: 'border-box'
       }}
     >
       {service.getAccordionList().map((value) => {

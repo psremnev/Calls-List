@@ -4,9 +4,9 @@ import { Content } from './Content'
 
 export default function App() {
   return (
-    <Box sx={{ display: 'flex', height: '100%' }}>
+    <section style={{ display: 'flex', height: '100%' }}>
       <Accordion />
       <Content />
-    </Box>
+    </section>
   )
 }

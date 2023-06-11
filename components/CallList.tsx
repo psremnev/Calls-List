@@ -181,7 +181,6 @@ export function CallList() {
             flexDirection: 'column',
             margin: '120px',
             overflow: 'hidden',
-            height: '100%',
             minHeight: 600
           }}
         >

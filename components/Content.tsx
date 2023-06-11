@@ -7,7 +7,6 @@ export function Content() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        width: '100%',
         height: '100%',
         background: 'rgba(234, 240, 250, 1)'
       }}
