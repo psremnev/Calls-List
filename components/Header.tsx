@@ -23,8 +23,6 @@ export function Header() {
     marginRight: '56px'
   }
 
-  const handleExpandClick = () => {}
-
   return (
     <Box
       sx={{

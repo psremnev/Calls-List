@@ -179,9 +179,10 @@ export function CallList() {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            margin: '120px',
+            padding: '120px',
             overflow: 'hidden',
-            minHeight: 600
+            minHeight: 600,
+            boxSizing: 'border-box'
           }}
         >
           <CallListHeader callback={updateList} />
