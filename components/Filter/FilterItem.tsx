@@ -19,10 +19,10 @@ export function FilterItem({
       sx={{
         display: 'flex',
         alignItems: 'center',
-        color: 'rgba(94, 119, 147, 1)',
-        fontSize: 14
+        color: selected ? 'rgba(0, 44, 251, 1)' : 'rgba(94, 119, 147, 1)',
+        fontSize: 14,
+        '&:hover': { background: 'rgb(222,228,255)' }
       }}
-      selected={selected}
       onClick={() =>
         clickCallback({
           name,

@@ -67,7 +67,11 @@ export function DateSelector({ callback }) {
 
   const getDateByOffset = (days, date = new Date(), forward = false) => {
     const day = date.getDate()
-    return new Date(date.getFullYear(), date.getMonth(), forward ? day + days : day - days)
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      forward ? day + days : day - days
+    )
   }
 
   const getFormatDateByRangeType = (type) => {
@@ -147,6 +151,7 @@ export function DateSelector({ callback }) {
         onClick={() => onPaginationClick(true)}
       />
       <Menu
+        MenuListProps={{ sx: { paddingBottom: 0, paddingTop: 0 } }}
         anchorEl={targetOpen}
         anchorOrigin={{
           vertical: 'top',
@@ -166,10 +171,13 @@ export function DateSelector({ callback }) {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              color: 'rgba(94, 119, 147, 1)',
-              fontSize: 14
+              color:
+                item.type === interval.type
+                  ? 'rgba(0, 44, 251, 1)'
+                  : 'rgba(94, 119, 147, 1)',
+              fontSize: 14,
+              '&:hover': { background: 'rgb(222,228,255)' }
             }}
-            selected={item.type === interval.type}
             onClick={() => onMenuClick(item)}
           >
             <Box key={index} sx={{ display: 'flex', flexDirection: 'column' }}>

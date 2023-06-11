@@ -56,6 +56,7 @@ function Filter(config: IFilter) {
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </Box>
       <Menu
+        MenuListProps={{ sx: { paddingBottom: 0, paddingTop: 0 } }}
         anchorEl={targetOpenFilter}
         anchorOrigin={{
           vertical: 'top',

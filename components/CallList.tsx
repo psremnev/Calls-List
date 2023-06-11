@@ -234,7 +234,16 @@ export function CallList() {
                           {header.type === 'checkbox' ? (
                             <>
                               {rowHoverId ? (
-                                <Checkbox color='primary' />
+                                <Checkbox
+                                  color='primary'
+                                  sx={{
+                                    '&:hover': {
+                                      backgroundColor:
+                                        'rgba(0, 44, 251, 1))'
+                                    },
+                                    color: 'rgba(173, 191, 223, 1)'
+                                  }}
+                                />
                               ) : (
                                 <></>
                               )}
@@ -269,6 +278,7 @@ export function CallList() {
                         const statusIsTrue = status === CallStatus.TRUE
                         const iconStyle = getIconStyle(statusIsTrue)
                         const duration = getDuration(time)
+                        const isHover = rowHoverId === id
 
                         return (
                           <TableRow
@@ -277,7 +287,13 @@ export function CallList() {
                             key={index}
                             onMouseEnter={() => setRowHoverId(id)}
                             onMouseLeave={() => setRowHoverId(null)}
-                            sx={{ fontSize: 15 }}
+                            sx={{
+                              fontSize: 15,
+                              '&:hover': {
+                                backgroundColor:
+                                  'rgba(212, 223, 243, 0.17) !important'
+                              }
+                            }}
                           >
                             {title && (
                               <TableCell
@@ -311,8 +327,15 @@ export function CallList() {
                             )}
                             {notTitle && (
                               <TableCell padding='checkbox'>
-                                {rowHoverId === id ? (
-                                  <Checkbox color='primary' />
+                                {isHover ? (
+                                  <Checkbox
+                                    color='primary'
+                                    sx={{
+                                      color: isHover
+                                        ? 'rgba(0, 44, 251, 1)'
+                                        : 'rgba(173, 191, 223, 1)'
+                                    }}
+                                  />
                                 ) : (
                                   <div style={{ width: 46 }}></div>
                                 )}
@@ -368,7 +391,7 @@ export function CallList() {
                                   textAlign: 'right'
                                 }}
                               >
-                                {rowHoverId === id ? (
+                                {isHover ? (
                                   <AudioPlayer
                                     id={id}
                                     partnership_id={partnership_id}
