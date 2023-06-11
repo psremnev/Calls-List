@@ -20,11 +20,12 @@ import { CallType, CallStatus } from '../enums'
 import { Error } from './Error'
 import { Rate } from './Rate'
 import { RATE_TYPE } from '../enums'
-import { AudioPlayer } from './AudioPlayer/AudioPlayer'
+import { AudioPlayer } from './AudioPlayer'
 import moment from 'moment'
 import { CallListHeader } from './CallListHeader'
 import { getFormatDate } from '../utils/getFormatDate'
 import { getFormatDateValue } from '../utils/getFormatDateValue'
+import { getDuration } from '../utils/getDuration'
 
 export function CallList() {
   const callService = useMemo(() => {
@@ -162,17 +163,6 @@ export function CallList() {
     return RATE_TYPE.BAD
   }
 
-  const getDuration = (time: number) => {
-    const secInMin = 60
-    const [min, sec] = String(time / secInMin).split('.')
-    if (!min || !sec) {
-      return '00:00'
-    }
-    return `${getFormatDateValue(min.slice(0, 2))}:${getFormatDateValue(
-      sec.slice(0, 1)
-    )}`
-  }
-
   const getGroupDate = (date: string) => {
     moment.locale('ru')
     const d = new Date(date)
@@ -238,8 +228,7 @@ export function CallList() {
                                   color='primary'
                                   sx={{
                                     '&:hover': {
-                                      backgroundColor:
-                                        'rgba(0, 44, 251, 1))'
+                                      backgroundColor: 'rgba(0, 44, 251, 1))'
                                     },
                                     color: 'rgba(173, 191, 223, 1)'
                                   }}
@@ -342,7 +331,7 @@ export function CallList() {
                               </TableCell>
                             )}
                             {notTitle && (
-                              <TableCell>
+                              <TableCell align='center'>
                                 {in_out === CallType.INCOMING ? (
                                   <CallReceived sx={iconStyle} />
                                 ) : (
@@ -350,17 +339,30 @@ export function CallList() {
                                 )}
                               </TableCell>
                             )}
-                            {notTitle && <TableCell>{getTime(date)}</TableCell>}
+                            {notTitle && (
+                              <TableCell align='center'>
+                                {getTime(date)}
+                              </TableCell>
+                            )}
                             {notTitle && (
                               <TableCell>
-                                <Avatar
-                                  alt={`${person_name} ${person_surname}`}
-                                  src={person_avatar}
-                                />
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    width: '100%',
+                                    justifyContent: 'center'
+                                  }}
+                                >
+                                  <Avatar
+                                    alt={`${person_name} ${person_surname}`}
+                                    src={person_avatar}
+                                  />
+                                </Box>
                               </TableCell>
                             )}
                             {notTitle && (
                               <TableCell
+                                align='center'
                                 sx={{
                                   color: CallStatus.TRUE
                                     ? 'rgba(18, 41, 69, 1)'
@@ -377,28 +379,45 @@ export function CallList() {
                               </TableCell>
                             )}
 
-                            {notTitle && <TableCell>{source}</TableCell>}
+                            {notTitle && (
+                              <TableCell align='center'>{source}</TableCell>
+                            )}
                             {notTitle && (
                               <TableCell>
-                                <Rate type={getRateType(statusIsTrue, time)} />
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    width: '100%',
+                                    justifyContent: 'center'
+                                  }}
+                                >
+                                  <Rate
+                                    type={getRateType(statusIsTrue, time)}
+                                  />
+                                </Box>
                               </TableCell>
                             )}
                             {notTitle && (
                               <TableCell
+                                align='center'
                                 sx={{
-                                  minWidth: 340,
-                                  padding: '0 20px',
-                                  textAlign: 'right'
+                                  minWidth: 400,
+                                  padding: '0 20px'
                                 }}
                               >
-                                {isHover ? (
-                                  <AudioPlayer
-                                    id={id}
-                                    partnership_id={partnership_id}
-                                  />
-                                ) : (
-                                  <span>{duration}</span>
-                                )}
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    width: '100%',
+                                    justifyContent: 'flex-end'
+                                  }}
+                                >
+                                  {isHover ? (
+                                    <AudioPlayer />
+                                  ) : (
+                                    <span>{duration}</span>
+                                  )}
+                                </Box>
                               </TableCell>
                             )}
                           </TableRow>
