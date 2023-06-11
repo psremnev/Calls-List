@@ -8,6 +8,7 @@ export function Content() {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
+        flex: 1,
         background: 'rgba(234, 240, 250, 1)'
       }}
     >
