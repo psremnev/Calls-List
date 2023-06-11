@@ -29,7 +29,7 @@ export function Header() {
     <Box
       sx={{
         padding: '0 120px',
-        height: 64,
+        minHeight: 64,
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
