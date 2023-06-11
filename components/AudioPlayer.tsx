@@ -52,6 +52,7 @@ export function AudioPlayer() {
     audio.currentTime = e.target.value
     if (!isPlay) {
       audio.play()
+      setIsPlay(!isPlay)
     }
   }
 
